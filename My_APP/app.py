@@ -8,6 +8,9 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, "users.db")
+
 app = Flask(__name__)
 
 load_dotenv()
@@ -24,7 +27,7 @@ mail = Mail(app)
 
 #Create a database 
 def create_database():
-    connection = sqlite3.connect("users.db")
+    connection = sqlite3.connect(DATABASE)
     cursor = connection.cursor()
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, verification_code TEXT, verified INTEGER DEFAULT 0)
@@ -61,7 +64,7 @@ def register():
         hashed_password = generate_password_hash(password)
 
         # Connect to database
-        connection = sqlite3.connect("users.db")
+        connection = sqlite3.connect(DATABASE)
         cursor = connection.cursor()
 
         try:
@@ -99,7 +102,7 @@ def verify():
         email = request.form["email"]
         entered_code = request.form["verification_code"]
 
-        connection = sqlite3.connect("users.db")
+        connection = sqlite3.connect(DATABASE)
         cursor = connection.cursor()
 
         cursor.execute("SELECT verification_code, verified FROM users WHERE email = ?", (email,)
@@ -132,7 +135,7 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        connection = sqlite3.connect("users.db")
+        connection = sqlite3.connect(DATABASE)
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM users WHERE email = ?", (email,)
         )
@@ -192,7 +195,8 @@ def logout():
     session.clear()
     return redirect("/login")
 
+create_database()
+
 # Start server 
 if __name__ == "__main__":
-    create_database()
-    app.run(debug=True) 
+    app.run(debug=True)

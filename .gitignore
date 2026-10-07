@@ -1,0 +1,5 @@
+users.db
+practice.db
+.env
+__pycache__/
+*.pyc

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>My Dashboard</h2>
+
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#">Messages</a>
+                <a href="#">Logout</a>
+            </nav>
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1>Dashboard</h1>
+                <p>Welcome back, {{ name }}!</p>
+            </header>
+
+
+            <!-- Cards -->
+            <section class="cards">
+
+                <div class="card">
+                    <h3>Users</h3>
+                    <p>125</p>
+                </div>
+
+                <div class="card">
+                    <h3>Messages</h3>
+                    <p>24</p>
+                </div>
+
+                <div class="card">
+                    <h3>Orders</h3>
+                    <p>18</p>
+                </div>
+
+                <div class="card">
+                    <h3>Status</h3>
+                    <p>Active</p>
+                </div>
+
+            </section>
+
+
+            <!-- Content -->
+            <section class="dashboard-section">
+
+                <h2>Recent Activity</h2>
+
+                <div class="activity">
+                    <p>User logged in</p>
+                    <p>Profile updated</p>
+                    <p>New message received</p>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

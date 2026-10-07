@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+
+    <title>Create Account</title>
+
+
+</head>
+<body>
+    
+    
+
+    <form action="/register" method="POST">
+ <h1>Create Account</h1>
+        <label>name</label>
+        <input type="text" name="name" placeholder="Enter your name" required>
+        <br><br>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <br><br>     
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+        <br><br> 
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" placeholder="Confirm your password" required>
+        <br><br>
+
+        <label for="privacy">I agree to the privacy policy:</label>
+        <input type="checkbox" id="privacy" name="privacy" required>
+        <br>
+
+        <label for="consent">I consent to the collection of my personal data:</label>
+        <input type="checkbox" id="consent" name="consent" required>
+        <br>
+
+        <button type='submit'>Create Account</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login here</a>.</p>
+
+</body>
+</html>

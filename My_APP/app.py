@@ -1,7 +1,7 @@
 
 
 from flask import Flask, render_template, request, redirect, session
-from flask_mail import Mail, Message
+import resend
 from dotenv import load_dotenv
 import os
 import sqlite3
@@ -17,13 +17,7 @@ load_dotenv()
 
 app.secret_key = os.getenv("SECRET_KEY")
 
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USE_TLS"] = False
-app.config["MAIL_USE_SSL"] = True
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
-mail = Mail(app)
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 #Create a database 
@@ -76,15 +70,15 @@ def register():
             connection.commit()
 
             # Send verification email
-            msg = Message(
-                "Verify your account",
-                sender=app.config["MAIL_USERNAME"],
-                recipients=[email]
-            )
-            
-            msg.body = f"""Hello {name}, Your verification code is: {verification_code} Enter this code on the verification page to verify your account. Thank you!
-            """
-            mail.send(msg)
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": [email],
+                "subject": "Verify your account",
+                "text": f"""Hello {name},
+                Your verification code is: {verification_code} Enter this code on the verification page to verify your account.
+                Thank you!
+                """
+            })
 
 
             return redirect("/verify")
@@ -165,14 +159,16 @@ def login():
             connection.close()
 
             # Send new Verification email
-            msg = Message(
-                "Your new verification code", sender=app.config["MAIL_USERNAME"],
-                recipients=[email]
-            )
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": [email],
+                "subject": "Your new verification code",
+                "text": f"""Hello {user[1]},
+                Your new verification code is: {verification_code} Enter this code on the verification page to verify your account.
+                Thank you
+                """
+            })
             
-            msg.body = f"""Hello {user[1]}, Your new verification code is: {verification_code} Enter this code on the verification page to verify your account. Thank you!
-            """
-            mail.send(msg)
 
             return redirect("/verify")
         connection.close()

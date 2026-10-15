@@ -6,7 +6,7 @@ body {
     align-items: center;
 }
 
-.register-form {
+.login-form, .register-form {
     border: none;
     background-color:aliceblue;
     border-radius: 10px; 

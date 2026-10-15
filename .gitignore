@@ -3,3 +3,5 @@ practice.db
 .env
 __pycache__/
 *.pyc
+port_scanner.py
+practice_password.py

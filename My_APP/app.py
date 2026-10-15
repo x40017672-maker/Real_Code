@@ -2,22 +2,35 @@
                 
 from email.policy import SMTP
 
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, session
 from flask_mail import Mail, Message
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
-import os
 import sqlite3
-from werkzeug.security import generate_password_hash, check_password_hash
 import random
+import os
+import re
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, "users.db")
 
 app = Flask(__name__)
 
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=[]
+)
+
 load_dotenv()
 
 app.secret_key = os.getenv("SECRET_KEY")
+
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = False
 
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"]= 587
@@ -52,11 +65,14 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        name = request.form["name"]
-        email = request.form["email"]
+        name = request.form["name"].strip()
+        email = request.form["email"].strip()
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
+        # Check email format
+        if not re.fullmatch(r"[^@\s]+@[^@\s]+", email):
+            return "Please enter a valid email address.", 400
 
         # Check passwords 
         if password != confirm_password:
@@ -138,6 +154,7 @@ def verify():
 
 # Login page
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute", methods=["POST"])
 def login():
     if request.method == "POST":
         email = request.form["email"]

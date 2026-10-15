@@ -1,0 +1,14 @@
+body {
+    background-color: #363232;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    border: none;
+    background-color:aliceblue;
+    border-radius: 10px; 
+    padding: 30px;
+}
